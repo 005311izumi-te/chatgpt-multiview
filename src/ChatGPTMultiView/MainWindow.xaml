@@ -25,10 +25,41 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <wv2:WebView2 x:Name="Pane1" Margin="2" />
-            <wv2:WebView2 x:Name="Pane2" Margin="2" />
-            <wv2:WebView2 x:Name="Pane3" Margin="2" />
-            <wv2:WebView2 x:Name="Pane4" Margin="2" />
+            <Grid x:Name="PaneContainer1" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox x:Name="Title1" Text="ChatGPT 1" Padding="8,5" />
+                <wv2:WebView2 x:Name="Pane1" Grid.Row="1" Margin="0,2,0,0" />
+            </Grid>
+
+            <Grid x:Name="PaneContainer2" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox x:Name="Title2" Text="ChatGPT 2" Padding="8,5" />
+                <wv2:WebView2 x:Name="Pane2" Grid.Row="1" Margin="0,2,0,0" />
+            </Grid>
+
+            <Grid x:Name="PaneContainer3" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox x:Name="Title3" Text="ChatGPT 3" Padding="8,5" />
+                <wv2:WebView2 x:Name="Pane3" Grid.Row="1" Margin="0,2,0,0" />
+            </Grid>
+
+            <Grid x:Name="PaneContainer4" Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox x:Name="Title4" Text="ChatGPT 4" Padding="8,5" />
+                <wv2:WebView2 x:Name="Pane4" Grid.Row="1" Margin="0,2,0,0" />
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

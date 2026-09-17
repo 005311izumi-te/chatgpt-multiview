@@ -10,18 +10,31 @@ public partial class MainWindow : Window
 {
     private static readonly Uri ChatGptUri = new("https://chatgpt.com/");
     private readonly WebView2[] _panes;
+    private readonly FrameworkElement[] _paneContainers;
+    private readonly TextBox[] _titleBoxes;
+    private readonly string _titlesPath;
 
     public MainWindow()
     {
         InitializeComponent();
+
         _panes = [Pane1, Pane2, Pane3, Pane4];
+        _paneContainers = [PaneContainer1, PaneContainer2, PaneContainer3, PaneContainer4];
+        _titleBoxes = [Title1, Title2, Title3, Title4];
+        _titlesPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "ChatGPTMultiView",
+            "titles.json");
+
         Loaded += OnLoaded;
+        Closing += OnClosing;
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         try
         {
+            LoadTitles();
             ApplyLayout(4);
             await InitializeWebViewsAsync();
         }
@@ -33,6 +46,22 @@ public partial class MainWindow : Window
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }
+    }
+
+    private void LoadTitles()
+    {
+        var titles = TitleStore.Load(_titlesPath);
+        for (var index = 0; index < _titleBoxes.Length; index++)
+        {
+            _titleBoxes[index].Text = titles[index];
+        }
+    }
+
+    private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        TitleStore.Save(
+            _titlesPath,
+            _titleBoxes.Select(titleBox => titleBox.Text).ToArray());
     }
 
     private async Task InitializeWebViewsAsync()
@@ -65,23 +94,23 @@ public partial class MainWindow : Window
 
     private void ApplyLayout(int paneCount)
     {
-        foreach (var pane in _panes)
+        foreach (var container in _paneContainers)
         {
-            pane.Visibility = Visibility.Collapsed;
-            Grid.SetRow(pane, 0);
-            Grid.SetColumn(pane, 0);
-            Grid.SetRowSpan(pane, 1);
-            Grid.SetColumnSpan(pane, 1);
+            container.Visibility = Visibility.Collapsed;
+            Grid.SetRow(container, 0);
+            Grid.SetColumn(container, 0);
+            Grid.SetRowSpan(container, 1);
+            Grid.SetColumnSpan(container, 1);
         }
 
         foreach (var placement in LayoutPlanner.ForPaneCount(paneCount))
         {
-            var pane = _panes[placement.PaneIndex];
-            Grid.SetRow(pane, placement.Row);
-            Grid.SetColumn(pane, placement.Column);
-            Grid.SetRowSpan(pane, placement.RowSpan);
-            Grid.SetColumnSpan(pane, placement.ColumnSpan);
-            pane.Visibility = Visibility.Visible;
+            var container = _paneContainers[placement.PaneIndex];
+            Grid.SetRow(container, placement.Row);
+            Grid.SetColumn(container, placement.Column);
+            Grid.SetRowSpan(container, placement.RowSpan);
+            Grid.SetColumnSpan(container, placement.ColumnSpan);
+            container.Visibility = Visibility.Visible;
         }
     }
 }
