@@ -1,4 +1,5 @@
 using ChatGPTMultiView;
+using Xunit;
 
 namespace ChatGPTMultiView.Tests;
 
